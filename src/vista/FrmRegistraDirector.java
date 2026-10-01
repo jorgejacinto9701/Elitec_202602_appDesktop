@@ -4,19 +4,24 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import entity.Director;
 import entity.TipoDirector;
+import model.DirectorModel;
 import model.TipoDirectorModel;
+import util.ValidateUtil;
 
 public class FrmRegistraDirector extends JFrame implements ActionListener {
 
@@ -120,6 +125,55 @@ public class FrmRegistraDirector extends JFrame implements ActionListener {
 		}
 	}
 	protected void handleBtnRegistrarActionPerformed(ActionEvent e) {
+		//1 Capturar los datos del formulario en variables locales de tipo String
+		String nombre = txtNombre.getText().trim();
+		String dni = txtDNI.getText().trim();
+		String email = txtEmmail.getText().trim();
+		String fechaNacimiento = txtFechaNacimiento.getText().trim();
+		String tipoSeleccionado = cboTipo.getSelectedItem().toString();
+		
+		//2 Validar con expresiones regulares
+		if (!nombre.matches(ValidateUtil.TEXTO_30)) {
+			JOptionPane.showMessageDialog(this, "El nombre es inválido. Debe contener solo letras y espacios, y tener entre 1 y 30 caracteres.");
+			return;
+		}
+		if (!dni.matches(ValidateUtil.DNI)) {
+			JOptionPane.showMessageDialog(this, "El DNI es inválido. Debe contener exactamente 8 dígitos.");
+			return;
+		}
+		if (!email.matches(ValidateUtil.EMAIL)) {
+            JOptionPane.showMessageDialog(this, "El email es inválido. Debe tener un formato válido .");
+            return;
+		}
+		if (!fechaNacimiento.matches(ValidateUtil.DATE_YYYY_MM_DD)) {
+			JOptionPane.showMessageDialog(this,"La fecha de nacimiento es inválida. Debe tener el formato YYYY-MM-DD.");
+			return;
+		}
+		if (cboTipo.getSelectedIndex() == 0) {
+			JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de director.");
+			return;
+		}
+		
+		//3 se crea un objeto de tipo Director y se le asignan los valores de las variables locales
+		TipoDirector objTipoDirector = new TipoDirector();
+		objTipoDirector.setIdTipoDirector(Integer.parseInt(tipoSeleccionado.split(" - ")[0]));
+		
+		Director objDirector = new Director();
+		objDirector.setNombres(nombre);
+		objDirector.setDni(dni);	
+		objDirector.setEmail(email);
+		objDirector.setFechaNacimiento(LocalDate.parse(fechaNacimiento));
+		objDirector.setTipoDirector(objTipoDirector);
+		
+		//4 se crea un objeto de tipo DirectorModel y se llama al metodo registrarDirector
+		DirectorModel objDirectorModel = new DirectorModel();
+		int insertados = objDirectorModel.insertaDirector(objDirector);
+		
+		//5 se muestra un mensaje de confirmacion
+		if (insertados > 0) {
+	           JOptionPane.showMessageDialog(this, "Director registrado correctamente");
+		}
+		
 	}
 	
 	public void cargarComboTipo() {
