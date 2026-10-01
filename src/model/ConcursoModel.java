@@ -28,6 +28,8 @@ public class ConcursoModel {
 			ps.setDate(3, Date.valueOf(concurso.getFechaFin()));
 			ps.setString(4, concurso.getEstado());
 
+			System.out.println("SQL: " + ps.toString());
+			
 			//3 Se ejecuta la sentencia SQL
 			insertados = ps.executeUpdate();
 
