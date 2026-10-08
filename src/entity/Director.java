@@ -15,4 +15,5 @@ public class Director {
 	private String email;
 	private LocalDate fechaNacimiento;
 	private TipoDirector tipoDirector;
+	private int estado;
 }

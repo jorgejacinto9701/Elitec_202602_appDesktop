@@ -163,10 +163,10 @@ CREATE TABLE `director` (
   `dni` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `fechaNacimiento` date DEFAULT NULL,
-  `idTipoDirector` int DEFAULT NULL,
+  `idTipoDirector` int unsigned DEFAULT NULL,
+  `estado` int DEFAULT '0',
   PRIMARY KEY (`idDirector`),
-  KEY `fk_director_tipo_idx` (`idTipoDirector`),
-  CONSTRAINT `fk_director_tipo` FOREIGN KEY (`idTipoDirector`) REFERENCES `tipodirector` (`idtipoDirector`)
+  KEY `fk_director_tipo_idx` (`idTipoDirector`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -176,7 +176,7 @@ CREATE TABLE `director` (
 
 LOCK TABLES `director` WRITE;
 /*!40000 ALTER TABLE `director` DISABLE KEYS */;
-INSERT INTO `director` VALUES (1,'Carlos Eduardo Mendoza','45892134','carlos.mendoza@empresa.com','1980-05-14',1),(2,'María Fernanda Torres','71234985','maria.torres@empresa.com','1985-11-22',2),(3,'Jorge Luis Ramírez','10982345','jorge.ramirez@empresa.com','1978-03-08',3),(4,'Ana Sofía Guerrero','63482190','ana.guerrero@empresa.com','1992-09-30',4),(5,'Roberto Carlos Silva','28910473','roberto.silva@empresa.com','1988-01-19',5),(6,'1','2','3','2010-10-10',5);
+INSERT INTO `director` VALUES (1,'Carlos Eduardo Mendoza','45892134','carlos.mendoza@empresa.com','1980-05-14',1,0),(2,'María Fernanda Torres','71234985','maria.torres@empresa.com','1985-11-22',2,0),(3,'Jorge Luis Ramírez','10982345','jorge.ramirez@empresa.com','1978-03-08',3,0),(4,'Ana Sofía Guerrero','63482190','ana.guerrero@empresa.com','1992-09-30',4,0),(5,'Roberto Carlos Silva','28910473','roberto.silva@empresa.com','1988-01-19',5,0),(6,'1','2','3','2010-10-10',5,0);
 /*!40000 ALTER TABLE `director` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -508,4 +508,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-09-30 21:53:43
+-- Dump completed on 2026-10-07 21:06:37

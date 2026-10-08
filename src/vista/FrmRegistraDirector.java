@@ -164,6 +164,7 @@ public class FrmRegistraDirector extends JFrame implements ActionListener {
 		objDirector.setEmail(email);
 		objDirector.setFechaNacimiento(LocalDate.parse(fechaNacimiento));
 		objDirector.setTipoDirector(objTipoDirector);
+		objDirector.setEstado(1); // Asignar estado activo (1)
 		
 		//4 se crea un objeto de tipo DirectorModel y se llama al metodo registrarDirector
 		DirectorModel objDirectorModel = new DirectorModel();
