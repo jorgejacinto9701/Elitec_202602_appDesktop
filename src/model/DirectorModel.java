@@ -301,6 +301,126 @@ public class DirectorModel {
 		}
 		return lista;
 	}
+	
+	public boolean existeDni(String dni) {
+		boolean existe = false;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			// 1. Crear conexion
+			conn = util.MySqlDBConexion.getConexion();
+
+			// 2. Crear sentencia SQL para verificar si existe el DNI
+			String sql = "SELECT COUNT(*) AS cantidad FROM director WHERE dni = ?";
+
+			// 3. Preparar la sentencia SQL
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, dni);
+			System.out.println("SQL: " + ps.toString());
+
+			// 4. Ejecutar la sentencia SQL
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				int cantidad = rs.getInt("cantidad");
+				existe = cantidad > 0;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+			}
+		}
+		return existe;
+	}
+	
+	public boolean existeEmail(String email) {
+		boolean existe = false;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			// 1. Crear conexion
+			conn = util.MySqlDBConexion.getConexion();
+
+			// 2. Crear sentencia SQL para verificar si existe el email
+			String sql = "SELECT COUNT(*) AS cantidad FROM director WHERE email = ?";
+
+			// 3. Preparar la sentencia SQL
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, email);
+			System.out.println("SQL: " + ps.toString());
+
+			// 4. Ejecutar la sentencia SQL
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				int cantidad = rs.getInt("cantidad");
+				existe = cantidad > 0;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+			}
+		}
+		return existe;
+	}
+	
+	public boolean existeNombre(String nombre) {
+		boolean existe = false;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			// 1. Crear conexion
+			conn = util.MySqlDBConexion.getConexion();
+
+			// 2. Crear sentencia SQL para verificar si existe el nombre
+			String sql = "SELECT COUNT(*) AS cantidad FROM director WHERE nombres = ?";
+
+			// 3. Preparar la sentencia SQL
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, nombre);
+			System.out.println("SQL: " + ps.toString());
+
+			// 4. Ejecutar la sentencia SQL
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				int cantidad = rs.getInt("cantidad");
+				existe = cantidad > 0;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+			}
+		 }
+		return existe;
+	}
 }
 
 

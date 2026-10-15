@@ -1,24 +1,33 @@
 package vista;
 
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.JCheckBox;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
+
+import entity.Director;
+import entity.TipoDirector;
+import model.DirectorModel;
+import model.TipoDirectorModel;
+import util.ValidateUtil;
 
 public class FrmCrudDirector extends JFrame implements ActionListener, MouseListener {
 
@@ -39,6 +48,15 @@ public class FrmCrudDirector extends JFrame implements ActionListener, MouseList
 	private JTable table;
 	private JComboBox<String> cboTipoDirector;
 
+	
+	//Invocar al modelo de Director
+	DirectorModel directorModel = new DirectorModel();	
+	
+	//Posicion del directro seleccionado de la tabla
+	int posSeleccionado = -1;
+	int idDirectorSeleccionado = -1;
+	JCheckBox chkEstado;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -129,7 +147,7 @@ public class FrmCrudDirector extends JFrame implements ActionListener, MouseList
 		lblEstado.setBounds(37, 281, 103, 14);
 		contentPane.add(lblEstado);
 		
-		JCheckBox chkEstado = new JCheckBox("Activo");
+		chkEstado = new JCheckBox("Activo");
 		chkEstado.setBounds(182, 277, 97, 23);
 		contentPane.add(chkEstado);
 		
@@ -183,6 +201,8 @@ public class FrmCrudDirector extends JFrame implements ActionListener, MouseList
 		));
 		scrollPane.setViewportView(table);
 
+		listar();
+		cargarComboTipo();
 	}
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnLimpiar) {
@@ -208,18 +228,25 @@ public class FrmCrudDirector extends JFrame implements ActionListener, MouseList
 		}
 	}
 	protected void handleBtnListarTodosActionPerformed(ActionEvent e) {
+		listar();
 	}
 	protected void handleBtnBuscarActionPerformed(ActionEvent e) {
+		buscar();
 	}
 	protected void handleBtnRegistarActionPerformed(ActionEvent e) {
+		registrar();
 	}
 	protected void handleBtnActualizarActionPerformed(ActionEvent e) {
+		actualizar();
 	}
 	protected void handleBtnEliminarLgicoActionPerformed(ActionEvent e) {
+		eliminarLogico();
 	}
 	protected void handleBtnEliminarFsicoActionPerformed(ActionEvent e) {
+		eliminarFisico();
 	}
 	protected void handleBtnLimpiarActionPerformed(ActionEvent e) {
+		limpiarFormulario();
 	}
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() == table) {
@@ -235,5 +262,265 @@ public class FrmCrudDirector extends JFrame implements ActionListener, MouseList
 	public void mouseReleased(MouseEvent e) {
 	}
 	protected void handleTableMouseClicked(MouseEvent e) {
+		posSeleccionado = table.getSelectedRow();
+		idDirectorSeleccionado = Integer.parseInt(table.getValueAt(posSeleccionado, 0).toString());
+		
+		System.out.println("Posición seleccionada: ==> " + posSeleccionado);
+		System.out.println("ID Director seleccionado: ==> " + idDirectorSeleccionado);
+		
+		txtCodigo.setText(table.getValueAt(posSeleccionado, 0).toString());
+		txtNombre.setText(table.getValueAt(posSeleccionado, 1).toString());
+		txtDni.setText(table.getValueAt(posSeleccionado, 2).toString());
+		txtEmail.setText(table.getValueAt(posSeleccionado, 3).toString());
+		txtFechaNacimiento.setText(table.getValueAt(posSeleccionado, 4).toString());
+		String tipo = table.getValueAt(posSeleccionado, 5).toString();
+		for (int i = 0; i < cboTipoDirector.getItemCount(); i++) {
+			if (cboTipoDirector.getItemAt(i).contains(tipo)) {
+				cboTipoDirector.setSelectedIndex(i);
+				break;
+			}
+		}
+		chkEstado.setSelected(table.getValueAt(posSeleccionado, 6).toString().equals("Activo"));
+	}
+	
+	public void listar() {
+		//1 Invocar al modelo de Director
+		List<Director> lista = directorModel.listaTodos();
+		
+		//2 Limpiar la tabla
+		DefaultTableModel tabla = (DefaultTableModel) table.getModel();
+		tabla.setRowCount(0);
+		
+		//3 Recorrer la lista y agregar los datos a la tabla
+		for (Director director : lista) {
+			Object[] fila = new Object[7];
+			fila[0] = director.getIdDirector();
+			fila[1] = director.getNombres();
+			fila[2] = director.getDni();
+			fila[3] = director.getEmail();
+			fila[4] = director.getFechaNacimiento();
+			fila[5] = director.getTipoDirector().getDescripcion();
+			fila[6] = director.getEstado() == 1 ? "Activo" : "Inactivo";
+			tabla.addRow(fila);
+		}
+	}
+	
+	public void cargarComboTipo() {
+		// 1 Invocar al modelo de TipoDirector
+		TipoDirectorModel model = new TipoDirectorModel();
+		List<TipoDirector> tipos = model.listarTipoDirector();
+
+		// 2 Limpiar el combo
+		cboTipoDirector.removeAllItems();
+
+		// 3 Agregar un item por defecto
+		cboTipoDirector.addItem("[ Seleccione ]");
+
+		// 4 Recorrer la lista y agregar los datos al combo
+		for (TipoDirector tipo : tipos) {
+			cboTipoDirector.addItem(tipo.getIdTipoDirector() + " - " + tipo.getDescripcion());
+		}
+	}
+
+	public void registrar() {
+		//1 Capturar los datos del formulario en variables locales de tipo String
+		String nombre = txtNombre.getText().trim();
+		String dni = txtDni.getText().trim();
+		String email = txtEmail.getText().trim();
+		String fechaNacimiento = txtFechaNacimiento.getText().trim();
+		String tipoSeleccionado = cboTipoDirector.getSelectedItem().toString();
+		
+		//2 Validar con expresiones regulares
+		if (!nombre.matches(ValidateUtil.TEXTO_30)) {
+			JOptionPane.showMessageDialog(this, "El nombre es inválido. Debe contener solo letras y espacios, y tener entre 1 y 30 caracteres.");
+			return;
+		}
+		if (!dni.matches(ValidateUtil.DNI)) {
+			JOptionPane.showMessageDialog(this, "El DNI es inválido. Debe contener exactamente 8 dígitos.");
+			return;
+		}
+		if (!email.matches(ValidateUtil.EMAIL)) {
+            JOptionPane.showMessageDialog(this, "El email es inválido. Debe tener un formato válido .");
+            return;
+		}
+		if (!fechaNacimiento.matches(ValidateUtil.DATE_YYYY_MM_DD)) {
+			JOptionPane.showMessageDialog(this,"La fecha de nacimiento es inválida. Debe tener el formato YYYY-MM-DD.");
+			return;
+		}
+		if (cboTipoDirector.getSelectedIndex() == 0) {
+			JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de director.");
+			return;
+		}
+		if (directorModel.existeNombre(nombre)) {
+			JOptionPane.showMessageDialog(this, "El bombre "+nombre+" ya existe en la base de datos. Ingrese otro nombre.");
+			return;
+		}
+		if (directorModel.existeDni(dni)) {
+			JOptionPane.showMessageDialog(this, "El DNI "+dni+" ya existe en la base de datos. Ingrese otro DNI.");
+			return;
+		}
+		if (directorModel.existeEmail(email)) {
+			JOptionPane.showMessageDialog(this, "El email " + email + " ya existe en la base de datos. Ingrese otro email.");
+			return;
+		}
+		//3 se crea un objeto de tipo Director y se le asignan los valores de las variables locales
+		TipoDirector objTipoDirector = new TipoDirector();
+		objTipoDirector.setIdTipoDirector(Integer.parseInt(tipoSeleccionado.split(" - ")[0]));
+		
+		Director objDirector = new Director();
+		objDirector.setNombres(nombre);
+		objDirector.setDni(dni);	
+		objDirector.setEmail(email);
+		objDirector.setFechaNacimiento(LocalDate.parse(fechaNacimiento));
+		objDirector.setTipoDirector(objTipoDirector);
+		objDirector.setEstado(1); // Asignar estado activo (1)
+		
+		//4 se crea un objeto de tipo DirectorModel y se llama al metodo registrarDirector
+		DirectorModel objDirectorModel = new DirectorModel();
+		int insertados = objDirectorModel.insertaDirector(objDirector);
+		
+		//5 se muestra un mensaje de confirmacion
+		if (insertados > 0) {
+			JOptionPane.showMessageDialog(this, "Director registrado correctamente");
+			listar(); // Actualizar la tabla después de registrar	
+			limpiarFormulario(); // Limpiar el formulario después de registrar
+		}
+	}
+	
+	void limpiarFormulario() {
+		txtCodigo.setText("");
+		txtNombre.setText("");
+		txtDni.setText("");
+		txtEmail.setText("");
+		txtFechaNacimiento.setText("");
+		cboTipoDirector.setSelectedIndex(0);
+	}
+	
+	void eliminarLogico() {
+		if (idDirectorSeleccionado == -1) {
+			JOptionPane.showMessageDialog(this, "Debe seleccionar un director de la tabla para eliminarlo");
+			return;
+		}
+		List<Director> lstLista =  directorModel.listaPorPk(idDirectorSeleccionado);
+		if (!lstLista.isEmpty()) {
+			int estado = lstLista.get(0).getEstado() == 1 ? 0 : 1; // Cambiar el estado;
+			int actualizados = directorModel.actualizaEstado(idDirectorSeleccionado, estado);
+			if (actualizados > 0) {
+				limpiarFormulario();
+				listar();
+				idDirectorSeleccionado = -1; // Reiniciar el ID seleccionado
+				JOptionPane.showMessageDialog(this, "Se actualizó el estado del director correctamente");
+			} else {
+				JOptionPane.showMessageDialog(this, "No se pudo actualizar el estado del director");
+			}
+		}
+		
+	}
+	
+	void eliminarFisico() {
+		if (idDirectorSeleccionado == -1) {
+			JOptionPane.showMessageDialog(this, "Debe seleccionar un director de la tabla para eliminarlo");
+			return;
+		}
+		
+		int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar el director seleccionado?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+		if (confirmacion == JOptionPane.YES_OPTION) {
+			int eliminados = directorModel.eliminarFisico(idDirectorSeleccionado);
+			if (eliminados > 0) {
+				limpiarFormulario();
+				listar();
+				idDirectorSeleccionado = -1; // Reiniciar el ID seleccionado
+				JOptionPane.showMessageDialog(this, "Director eliminado correctamente");
+			} else {
+				JOptionPane.showMessageDialog(this, "No se pudo eliminar el director");
+			}
+		}
+	}
+	
+	void actualizar() {
+        if (idDirectorSeleccionado == -1) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un director de la tabla para actualizarlo");
+            return;
+        }
+        
+      //1 Capturar los datos del formulario en variables locales de tipo String
+        	String id = txtCodigo.getText().trim();
+      		String nombre = txtNombre.getText().trim();
+      		String dni = txtDni.getText().trim();
+      		String email = txtEmail.getText().trim();
+      		String fechaNacimiento = txtFechaNacimiento.getText().trim();
+      		String tipoSeleccionado = cboTipoDirector.getSelectedItem().toString();
+      		
+      		//2 Validar con expresiones regulares
+      		if (!nombre.matches(ValidateUtil.TEXTO_30)) {
+      			JOptionPane.showMessageDialog(this, "El nombre es inválido. Debe contener solo letras y espacios, y tener entre 1 y 30 caracteres.");
+      			return;
+      		}
+      		if (!dni.matches(ValidateUtil.DNI)) {
+      			JOptionPane.showMessageDialog(this, "El DNI es inválido. Debe contener exactamente 8 dígitos.");
+      			return;
+      		}
+      		if (!email.matches(ValidateUtil.EMAIL)) {
+                  JOptionPane.showMessageDialog(this, "El email es inválido. Debe tener un formato válido .");
+                  return;
+      		}
+      		if (!fechaNacimiento.matches(ValidateUtil.DATE_YYYY_MM_DD)) {
+      			JOptionPane.showMessageDialog(this,"La fecha de nacimiento es inválida. Debe tener el formato YYYY-MM-DD.");
+      			return;
+      		}
+      		if (cboTipoDirector.getSelectedIndex() == 0) {
+      			JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de director.");
+      			return;
+      		}
+      		//3 se crea un objeto de tipo Director y se le asignan los valores de las variables locales
+      		TipoDirector objTipoDirector = new TipoDirector();
+      		objTipoDirector.setIdTipoDirector(Integer.parseInt(tipoSeleccionado.split(" - ")[0]));
+      		
+      		Director objDirector = new Director();
+      		objDirector.setIdDirector(Integer.parseInt(id));
+      		objDirector.setNombres(nombre);
+      		objDirector.setDni(dni);	
+      		objDirector.setEmail(email);
+      		objDirector.setFechaNacimiento(LocalDate.parse(fechaNacimiento));
+      		objDirector.setTipoDirector(objTipoDirector);
+      		objDirector.setEstado(1); // Asignar estado activo (1)
+      		
+      		//4 se crea un objeto de tipo DirectorModel y se llama al metodo registrarDirector
+      		DirectorModel objDirectorModel = new DirectorModel();
+      		int actualizados = objDirectorModel.acualizarDirector(objDirector);
+      		
+      		//5 se muestra un mensaje de confirmacion
+      		if (actualizados > 0) {
+      			JOptionPane.showMessageDialog(this, "Director actualizado correctamente");
+      			listar(); // Actualizar la tabla después de registrar	
+      			limpiarFormulario(); // Limpiar el formulario después de registrar
+      		}
+       
+	}
+	
+	void buscar() {
+		String id = txtCodigo.getText().trim();
+		List<Director> lista =  directorModel.listaPorPk(Integer.parseInt(id));
+		
+		
+		//2 Limpiar la tabla
+		DefaultTableModel tabla = (DefaultTableModel) table.getModel();
+		tabla.setRowCount(0);
+				
+		//3 Recorrer la lista y agregar los datos a la tabla
+		for (Director director : lista) {
+					Object[] fila = new Object[7];
+					fila[0] = director.getIdDirector();
+					fila[1] = director.getNombres();
+					fila[2] = director.getDni();
+					fila[3] = director.getEmail();
+					fila[4] = director.getFechaNacimiento();
+					fila[5] = director.getTipoDirector().getDescripcion();
+					fila[6] = director.getEstado() == 1 ? "Activo" : "Inactivo";
+					tabla.addRow(fila);
+		}
+		
 	}
 }
+
+
