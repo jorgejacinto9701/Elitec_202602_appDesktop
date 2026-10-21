@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import entity.Boleta;
@@ -26,8 +27,7 @@ public class BoletaModel {
 	        // 1. Se crea el sql de la cabecera (usando LocalDate y Cliente)
 	        String sql1 = "insert into boleta values(null, ?, ?)"; // Ajusta según las columnas reales de tu tabla boleta
 	        pstm1 = conn.prepareStatement(sql1);
-	        
-	        pstm1.setDate(1, java.sql.Date.valueOf(boletaBean.getFechaEmision()));
+	        pstm1.setTimestamp(1, java.sql.Timestamp.valueOf(LocalDateTime.now()));
 	        pstm1.setInt(2, boletaBean.getCliente().getIdCliente());
 	        pstm1.executeUpdate();
 	    	System.out.println("SQL 1 : " + pstm1);
