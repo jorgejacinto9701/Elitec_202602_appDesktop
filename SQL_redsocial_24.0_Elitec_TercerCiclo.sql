@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `redsocial` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `redsocial`;
 -- MySQL dump 10.13  Distrib 8.0.30, for Win64 (x86_64)
 --
 -- Host: localhost    Database: redsocial
@@ -43,6 +41,63 @@ LOCK TABLES `alumno` WRITE;
 /*!40000 ALTER TABLE `alumno` DISABLE KEYS */;
 INSERT INTO `alumno` VALUES (1,'Luciana Valentina Perez','12345678','luciana@gmail.com','2010-10-08',0),(2,'Jorge Jacinto','87477474','elba@gmail.com','1979-05-26',1),(3,'Elba Valentina','87474587','luciana@gmail.com','1980-05-19',1),(4,'Jorge jacinto','54785478','jorge@gmail.com','1980-10-10',0);
 /*!40000 ALTER TABLE `alumno` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `boleta`
+--
+
+DROP TABLE IF EXISTS `boleta`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `boleta` (
+  `idboleta` int NOT NULL AUTO_INCREMENT,
+  `fecha` datetime DEFAULT NULL,
+  `idcliente` int NOT NULL,
+  PRIMARY KEY (`idboleta`),
+  KEY `fk_boleta_cliente` (`idcliente`),
+  CONSTRAINT `fk_boleta_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idCliente`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `boleta`
+--
+
+LOCK TABLES `boleta` WRITE;
+/*!40000 ALTER TABLE `boleta` DISABLE KEYS */;
+INSERT INTO `boleta` VALUES (26,'2026-10-20 00:00:00',10),(27,'2026-10-20 22:42:56',21);
+/*!40000 ALTER TABLE `boleta` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `boleta_has_producto`
+--
+
+DROP TABLE IF EXISTS `boleta_has_producto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `boleta_has_producto` (
+  `idproducto` int NOT NULL,
+  `idboleta` int NOT NULL,
+  `precio` double DEFAULT NULL,
+  `cantidad` int DEFAULT NULL,
+  PRIMARY KEY (`idproducto`,`idboleta`),
+  KEY `fk_producto_has_boleta_producto1` (`idproducto`),
+  KEY `fk_producto_has_boleta_boleta1` (`idboleta`),
+  CONSTRAINT `fk_producto_has_boleta_boleta1` FOREIGN KEY (`idboleta`) REFERENCES `boleta` (`idboleta`),
+  CONSTRAINT `fk_producto_has_boleta_producto1` FOREIGN KEY (`idproducto`) REFERENCES `producto` (`idproducto`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `boleta_has_producto`
+--
+
+LOCK TABLES `boleta_has_producto` WRITE;
+/*!40000 ALTER TABLE `boleta_has_producto` DISABLE KEYS */;
+INSERT INTO `boleta_has_producto` VALUES (6,26,220,2),(7,26,230,1),(7,27,230,1),(8,26,175.5,4),(10,26,1599,3);
+/*!40000 ALTER TABLE `boleta_has_producto` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -95,7 +150,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (1,'Luciana Valentina','87474587','2022-04-04 10:59:04',1,3),(2,'Luciana Valentina','87474587','2022-04-04 10:59:04',1,3),(3,'Juana Garcia','87474587','2022-04-04 10:59:04',1,3),(4,'Elba Flores','56565656','2022-04-04 10:59:04',1,2),(21,'Angelica','41545454','2023-09-04 22:15:43',0,3),(22,'Ana Perez','99999999','2023-09-04 22:28:13',1,2),(23,'Luciana Valentina Jacinto','40228588','2023-09-04 22:29:42',1,2),(24,'Jorge Jacinto Gutarra','40228589','2023-09-04 22:29:42',1,1),(25,'Juan Quispe','74342286','2026-06-09 00:00:00',1,1),(26,'Juan Quispe','74342286','2026-06-09 21:41:37',1,5),(27,'Juan Quispe','40228588','2026-06-09 21:42:03',1,2),(28,'Luis quispe','40228577','2026-06-10 21:04:23',1,3),(29,'Luis quispe','40228577','2026-06-10 21:04:37',1,5),(30,'Luis quispe','40228577','2026-06-10 21:04:51',1,5),(31,'Luis quispe','40228577','2026-06-10 21:05:00',1,5),(32,'AAA','74342286','2026-06-10 21:10:10',1,1),(33,'AAA','74342286','2026-06-10 21:10:11',1,1),(34,'AAA','74342286','2026-06-10 21:10:12',1,1),(35,'AAA','74342286','2026-06-10 21:10:13',1,1),(36,'Luisa Flores','12345678','2026-06-10 21:12:18',1,4),(37,'Jorge Jacinto','12345679','2026-06-10 21:17:39',1,3),(38,'Juan','23232323','2026-06-17 19:18:16',1,1),(39,'Elbita','84591526','2026-06-10 21:17:39',1,2),(40,'Elbita b','33232323','2026-06-17 19:51:22',1,4);
+INSERT INTO `cliente` VALUES (1,'Juan Pérez Gómez','72819201','2026-01-15 08:30:00',1,1),(2,'María López Sánchez','45127839','2026-01-16 09:15:00',1,2),(3,'Carlos Rodríguez Quispe','61239485','2026-01-18 10:00:00',1,3),(4,'Ana Torres Huamán','70381924','2026-01-20 11:20:00',1,4),(5,'Luis Mendoza García','41239856','2026-01-22 14:00:00',1,5),(6,'Rosa Flores Castillo','71928374','2026-01-25 15:30:00',1,1),(7,'Jorge Ramírez Ramos','48392019','2026-02-01 08:45:00',1,2),(8,'Carmen Vargas Rojas','73920184','2026-02-03 09:30:00',0,3),(9,'Manuel Gutiérrez Díaz','40192837','2026-02-05 10:15:00',1,4),(10,'Patricia Cruz Medina','71239487','2026-02-08 12:00:00',1,5),(11,'José Silva Paredes','45920183','2026-02-10 13:45:00',1,1),(12,'Lucía Morales Torres','72910283','2026-02-12 16:20:00',1,2),(13,'David Castillo Vega','43819203','2026-02-15 09:00:00',1,3),(14,'Elena Romero Castro','70293847','2026-02-18 11:10:00',0,4),(15,'Miguel Herrera Navarro','49201837','2026-02-20 14:30:00',1,5),(16,'Sofia Benítez Ríos','71829304','2026-02-22 16:00:00',1,1),(17,'Pedro Medina Silva','42918273','2026-02-25 08:20:00',1,2),(18,'Beatriz Espinoza León','73829104','2026-03-01 10:50:00',1,3),(19,'Gabriel Ortiz Campos','41928374','2026-03-03 12:15:00',1,4),(20,'Valeria Salas Paredes','70192834','2026-03-05 15:40:00',1,5),(21,'Ricardo Paredes Núñez','46291837','2026-03-08 09:10:00',1,1),(22,'Daniela Rios Fuentes','72918203','2026-03-10 11:30:00',0,2),(23,'Fernando Vega Chávez','43920183','2026-03-12 13:20:00',1,3),(24,'Claudia Acuña Meza','71029384','2026-03-15 14:50:00',1,4),(25,'Alejandro Soto Cárdenas','48291038','2026-03-18 16:10:00',1,5),(26,'Milagros Rivas Luna','73918204','2026-03-20 09:40:00',1,1),(27,'Ernesto Guizado Pinedo','41029384','2026-03-22 11:00:00',1,2),(28,'Teresa Meléndez Zevallos','70918273','2026-03-25 13:15:00',1,3),(29,'Raúl Cárdenas Bravo','45918203','2026-03-28 15:00:00',0,4),(30,'Gabriela Ponce de León','72192834','2026-03-30 16:45:00',1,5);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +231,7 @@ CREATE TABLE `director` (
 
 LOCK TABLES `director` WRITE;
 /*!40000 ALTER TABLE `director` DISABLE KEYS */;
-INSERT INTO `director` VALUES (1,'Carlos Eduardo Mendoza','45892134','carlos.mendoza@empresa.com','1980-05-14',1,0),(2,'María Fernanda Torres','71234985','maria.torres@empresa.com','1985-11-22',2,0),(3,'Jorge Luis Ramírez','10982345','jorge.ramirez@empresa.com','1978-03-08',3,0),(4,'Ana Sofía Guerrero','63482190','ana.guerrero@empresa.com','1992-09-30',4,0),(5,'Roberto Carlos Silva','28910473','roberto.silva@empresa.com','1988-01-19',5,0),(6,'1','2','3','2010-10-10',5,0);
+INSERT INTO `director` VALUES (1,'Carlos Eduardo Mendoza','45892134','carlos.mendoza@empresa.com','1980-05-14',1,0),(2,'María Fernanda Torres','71234985','maria.torres@empresa.com','1985-11-22',2,0),(3,'Jorge Luis Ramírez','10982345','jorge.ramirez@empresa.com','1978-03-08',3,0),(4,'Ana Sofía Guerrero','63482190','ana.guerrero@empresa.com','1992-09-30',4,0),(5,'Roberto Carlos Silva','28910473','roberto.silva@empresa.com','1988-01-19',5,0);
 /*!40000 ALTER TABLE `director` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -392,6 +447,33 @@ INSERT INTO `pais` VALUES (1,'AF','Afganistán'),(2,'AX','Islas Gland'),(3,'AL',
 UNLOCK TABLES;
 
 --
+-- Table structure for table `producto`
+--
+
+DROP TABLE IF EXISTS `producto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `producto` (
+  `idproducto` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) DEFAULT NULL,
+  `marca` varchar(45) DEFAULT NULL,
+  `precio` double DEFAULT NULL,
+  `stock` int DEFAULT NULL,
+  PRIMARY KEY (`idproducto`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `producto`
+--
+
+LOCK TABLES `producto` WRITE;
+/*!40000 ALTER TABLE `producto` DISABLE KEYS */;
+INSERT INTO `producto` VALUES (1,'Laptop Core i5 15.6\"','HP',2499.99,15),(2,'Mouse Inalámbrico Óptico','Logitech',45.5,50),(3,'Teclado Mecánico RGB Gamer','Redragon',189,30),(4,'Monitor LED 24\" Full HD','Samsung',650,20),(5,'Impresora Multifuncional EcoTank','Epson',899,12),(6,'Auriculares Gamer con Micrófono','HyperX',220,23),(7,'Disco Duro Externo 1TB','Western Digital',230,38),(8,'Estado Sólido SSD 500GB NVMe','Kingston',175.5,31),(9,'Memoria USB 64GB 3.2','SanDisk',32,80),(10,'Tarjeta Gráfica RTX 4060','NVIDIA',1599,5),(11,'Laptop Gamer Core i7','ASUS',4200,10),(12,'Router Wi-Fi Dual Band','TP-Link',120,28),(13,'Parlantes Multimedia 2.0','Genius',65,45),(14,'Webcam HD 1080p con Micrófono','Logitech',145,22),(15,'Silla Gamer Ergonómica','Corsair',850,6),(16,'Tablet 10.1\" 64GB','Lenovo',720,18),(17,'Smartphone 128GB 6GB RAM','Xiaomi',950,25),(18,'Smartwatch Deportivo','Amazfit',280,30),(19,'Estabilizador de Voltaje 1000VA','Forza',110,14),(20,'Cable HDMI 2.0 4K de 2 metros','Ugreen',25,100),(21,'Hub USB 3.0 de 4 Puertos','Anker',55,60),(22,'Adaptador Wi-Fi USB Nano','TP-Link',35,70),(23,'Micrófono Condensador USB para Streaming','HyperX',380,15),(24,'Proyector LED Full HD','Epson',1450,5),(25,'Maletín para Laptop 15.6\"',' Targus',95,40),(26,'Pad Mouse Gigante para Escritorio','Razer',60,55),(27,'Memoria RAM 16GB DDR4 3200MHz','Corsair',210,32),(28,'Cooler Pad para Laptop con 2 Ventiladores','Cooler Master',90,24),(29,'Batería Portátil Power Bank 20000mAh','Xiaomi',135,40),(30,'Kit de Herramientas para Mantenimiento de PC','Jakemy',75,20);
+/*!40000 ALTER TABLE `producto` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `proveedor`
 --
 
@@ -508,4 +590,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-07 21:06:37
+-- Dump completed on 2026-10-20 22:44:04
