@@ -23,7 +23,7 @@ public class ClienteModel {
             conn = MySqlDBConexion.getConexion();
 
             // 2. Crear sentencia SQL con LIKE
-            String sql = "SELECT * FROM cliente WHERE nombre LIKE ?";
+            String sql = "SELECT * FROM cliente WHERE nombre LIKE ? order by nombre desc";
             pstm = conn.prepareStatement(sql);
             
             // Asignar el parámetro con los comodines '%' para la búsqueda parcial

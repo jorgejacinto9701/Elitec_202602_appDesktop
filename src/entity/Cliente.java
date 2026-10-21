@@ -14,6 +14,6 @@ public class Cliente {
     private String dni;
     private LocalTime fechaRegistro;
     private int estado;
-  
+    private Categoria categoria;
 
 }

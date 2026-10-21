@@ -10,7 +10,6 @@ public class Producto {
     private int idProducto;
     private String nombre;
     private String marca;
-    private int cantidad;
     private double precio;
     private int stock;
 

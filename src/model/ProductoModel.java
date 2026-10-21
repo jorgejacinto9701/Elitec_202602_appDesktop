@@ -39,7 +39,6 @@ public class ProductoModel {
                 producto.setIdProducto(rs.getInt("idProducto"));
                 producto.setNombre(rs.getString("nombre"));
                 producto.setMarca(rs.getString("marca"));
-                producto.setCantidad(rs.getInt("cantidad"));
                 producto.setPrecio(rs.getDouble("precio"));
                 producto.setStock(rs.getInt("stock"));
                 
