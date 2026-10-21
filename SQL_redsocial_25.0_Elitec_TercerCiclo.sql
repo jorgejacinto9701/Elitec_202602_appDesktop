@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `redsocial` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `redsocial`;
 -- MySQL dump 10.13  Distrib 8.0.30, for Win64 (x86_64)
 --
 -- Host: localhost    Database: redsocial
@@ -66,7 +68,6 @@ CREATE TABLE `boleta` (
 
 LOCK TABLES `boleta` WRITE;
 /*!40000 ALTER TABLE `boleta` DISABLE KEYS */;
-INSERT INTO `boleta` VALUES (26,'2026-10-20 00:00:00',10),(27,'2026-10-20 22:42:56',21);
 /*!40000 ALTER TABLE `boleta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -96,7 +97,6 @@ CREATE TABLE `boleta_has_producto` (
 
 LOCK TABLES `boleta_has_producto` WRITE;
 /*!40000 ALTER TABLE `boleta_has_producto` DISABLE KEYS */;
-INSERT INTO `boleta_has_producto` VALUES (6,26,220,2),(7,26,230,1),(7,27,230,1),(8,26,175.5,4),(10,26,1599,3);
 /*!40000 ALTER TABLE `boleta_has_producto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -590,4 +590,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-20 22:44:04
+-- Dump completed on 2026-10-20 22:45:29
